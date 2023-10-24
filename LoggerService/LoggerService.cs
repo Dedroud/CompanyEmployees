@@ -1,7 +1,7 @@
 ﻿using NLog;
-
 namespace LoggerService
 {
+
     public class LoggerManager : ILoggerManager
     {
         private static ILogger logger = LogManager.GetCurrentClassLogger();
@@ -24,5 +24,7 @@ namespace LoggerService
         {
             logger.Warn(message);
         }
+
     }
 }
+

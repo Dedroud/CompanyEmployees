@@ -1,5 +1,9 @@
-﻿using CompanyEmployees.Extensions;
+﻿using AutoMapper;
+using CompanyEmployees.Extensions;
 using Contracts;
+using Entities.DataTransferObjects;
+using Entities.Models;
+using LoggerService;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using NLog;
@@ -9,9 +13,10 @@ namespace CompanyEmployees
 {
     public class Startup
     {
+        [Obsolete]
         public Startup(IConfiguration configuration)
         {
-            LogManager.Setup().LoadConfigurationFromFile(string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
+            LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
             Configuration = configuration;
         }
 
@@ -27,10 +32,11 @@ namespace CompanyEmployees
             services.AddControllers();
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
-            services.ConfigureRepositoryManager();
+            services.AddAutoMapper(typeof(Startup));
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerManager logger)
         {
             if (env.IsDevelopment())
             {
@@ -39,6 +45,7 @@ namespace CompanyEmployees
                 app.UseSwaggerUI();
             }
 
+            app.ConfigureExceptionHandler((Contracts.ILoggerManager)logger);
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCors("CorsPolicy");
@@ -55,6 +62,15 @@ namespace CompanyEmployees
             {
                 endpoints.MapControllers();
             });
+        }
+        public interface IRepositoryBase<T>
+        {
+            IQueryable<T> FindAll(bool trackChanges);
+            IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression, bool
+           trackChanges);
+            void Create(T entity);
+            void Update(T entity);
+            void Delete(T entity);
         }
     }
 }

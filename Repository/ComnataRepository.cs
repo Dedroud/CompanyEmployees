@@ -5,11 +5,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static Contracts.Contracts;
+using Contracts;
 
 namespace Repository
 {
-    public class ComnataRepository : RepositoryBase<Comnata>, IcomnataRepository
+    public class ComnataRepository : RepositoryBase<Comnata>, IComnataRepository
     {
         public ComnataRepository(RepositoryContext repositoryContext)
         : base(repositoryContext)
@@ -21,7 +21,7 @@ namespace Repository
             throw new NotImplementedException();
         }
     }
-    public class HumanRepository : RepositoryBase<Human>, IhumanRepository
+    public class HumanRepository : RepositoryBase<Human>, IHumanRepository
     {
         public HumanRepository(RepositoryContext repositoryContext)
         : base(repositoryContext)

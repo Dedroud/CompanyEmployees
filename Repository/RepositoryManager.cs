@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static Contracts.Contracts;
 
 namespace Repository
 {
@@ -38,9 +37,9 @@ namespace Repository
             }
         }
 
-        public IcomnataRepository Comnata => throw new NotImplementedException();
+        public IComnataRepository Comnata => throw new NotImplementedException();
 
-        public IhumanRepository Human => throw new NotImplementedException();
+        public IHumanRepository Human => throw new NotImplementedException();
 
         public ILoggerManager LoggerManager => throw new NotImplementedException();
 

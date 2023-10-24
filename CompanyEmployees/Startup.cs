@@ -1,6 +1,9 @@
 ﻿using CompanyEmployees.Extensions;
+using Contracts;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Mvc;
 using NLog;
+using System.Linq.Expressions;
 
 namespace CompanyEmployees
 {
@@ -24,6 +27,7 @@ namespace CompanyEmployees
             services.AddControllers();
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
+            services.ConfigureRepositoryManager();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

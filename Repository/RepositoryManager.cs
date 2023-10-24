@@ -15,7 +15,6 @@ namespace Repository
         private RepositoryContext _repositoryContext;
         private ICompanyRepository _companyRepository;
         private IEmployeeRepository _employeeRepository;
-        private IcomnataRepository _comnataRepository;
         public RepositoryManager(RepositoryContext repositoryContext)
         {
             _repositoryContext = repositoryContext;
@@ -33,21 +32,9 @@ namespace Repository
         {
             get
             {
-
-                if (_employeeRepository == null)
+            if (_employeeRepository == null)
                     _employeeRepository = new EmployeeRepository(_repositoryContext);
                 return _employeeRepository;
-            }
-        }
-
-
-        public IcomnataRepository student
-        {
-            get
-            {
-                if (_comnataRepository == null)
-                    _comnataRepository = new ComnataRepository(_repositoryContext);
-                return _comnataRepository;
             }
         }
 
@@ -55,7 +42,7 @@ namespace Repository
 
         public IhumanRepository Human => throw new NotImplementedException();
 
-        ILoggerManager IRepositoryManager.LoggerManager => throw new NotImplementedException();
+        public ILoggerManager LoggerManager => throw new NotImplementedException();
 
         public void Save() => _repositoryContext.SaveChanges();
     }

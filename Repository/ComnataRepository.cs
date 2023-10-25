@@ -21,6 +21,11 @@ namespace Repository
             throw new NotImplementedException();
         }
     }
+
+    internal interface IComnataRepository
+    {
+    }
+
     public class HumanRepository : RepositoryBase<Human>, IHumanRepository
     {
         public HumanRepository(RepositoryContext repositoryContext)

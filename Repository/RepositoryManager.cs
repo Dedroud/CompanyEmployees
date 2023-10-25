@@ -37,10 +37,6 @@ namespace Repository
             }
         }
 
-        public IComnataRepository Comnata => throw new NotImplementedException();
-
-        public IHumanRepository Human => throw new NotImplementedException();
-
         public ILoggerManager LoggerManager => throw new NotImplementedException();
 
         public void Save() => _repositoryContext.SaveChanges();

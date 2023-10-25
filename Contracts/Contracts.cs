@@ -19,11 +19,13 @@ namespace Contracts
     {
         void AnyMethodFromCompanyRepository();
         IEnumerable<Company> GetAllCompanies(bool trackChanges);
+        Company GetCompany(Guid companyId, bool trackChanges);
     }
 
     public interface IEmployeeRepository
     {
-        void AnyMethodFromEmployeeRepository();
+        IEnumerable<Employee> GetEmployees(Guid companyId, bool trackChanges);
+        Employee GetEmployee(Guid companyId, Guid id, bool trackChanges);
     }
 
     public interface ILoggerManager
@@ -51,6 +53,7 @@ namespace Contracts
         void Update(T entity);
         void Delete(T entity);
     }
+
 }
 
     

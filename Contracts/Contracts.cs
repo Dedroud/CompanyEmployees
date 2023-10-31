@@ -12,10 +12,10 @@ namespace Contracts
 
     public interface ICompanyRepository
     {
-        IEnumerable<Company> GetAllCompanies(bool trackChanges);
-        Company GetCompany(Guid companyId, bool trackChanges);
+        Task<IEnumerable<Company>> GetAllCompaniesAsync(bool trackChanges);
+        Task<Company> GetCompany(Guid companyId, bool trackChanges);
         void CreateCompany(Company company);
-        IEnumerable<Company> GetByIds(IEnumerable<Guid> ids, bool trackChanges);
+        Task<IEnumerable<Company>> GetByIdsAsync(IEnumerable<Guid> ids, bool trackChanges);
         void DeleteCompany(Company company);
     }
 
@@ -25,6 +25,7 @@ namespace Contracts
         Employee GetEmployee(Guid companyId, Guid id, bool trackChanges);
         void CreateEmployeeForCompany(Guid companyId, Employee employee);
         void DeleteEmployee(Employee employee);
+        Task GetEmployeesAsync(Guid companyId, bool trackChanges);
     }
 
     public interface ILoggerManager
@@ -41,6 +42,7 @@ namespace Contracts
         IEmployeeRepository Employee { get; }
         ILoggerManager LoggerManager { get; }
         void Save();
+        Task SaveAsync();
     }
     public interface IRepositoryBase<T>
     {

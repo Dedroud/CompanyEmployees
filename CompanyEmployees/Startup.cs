@@ -39,6 +39,10 @@ namespace CompanyEmployees
                 config.ReturnHttpNotAcceptable = true;
             }).AddXmlDataContractSerializerFormatters()
               .AddCustomCSVFormatter();
+            services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
+            });
         }
 
 

@@ -37,6 +37,7 @@ namespace Repository
             }
         }
 
+
         public ILoggerManager LoggerManager => throw new NotImplementedException();
 
         public void Save() => _repositoryContext.SaveChanges();

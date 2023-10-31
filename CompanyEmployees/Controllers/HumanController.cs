@@ -10,7 +10,7 @@ using Newtonsoft.Json;
 
 namespace CompanyEmployees.Controllers
 {
-    [Route("api/Comnata/{gradeId}/Human")]
+    [Route("api/Comnata/{ComnataId}/Human")]
     [ApiController]
     public class HumanController : ControllerBase
     {
@@ -18,7 +18,6 @@ namespace CompanyEmployees.Controllers
         private readonly ILoggerManager _logger;
         private readonly IMapper _mapper;
         private object ComnataId;
-
         public HumanController(IRepositoryManager repository, ILoggerManager logger, IMapper mapper)
         {
             _repository = repository;
@@ -102,8 +101,8 @@ namespace CompanyEmployees.Controllers
         [ServiceFilter(typeof(ValidateHumanForComnataExistsAttribute))]
         public async Task<IActionResult> PartiallyUpdateHumanForComnata(Guid comnataId, Guid id, [FromBody] JsonPatchDocument<HumanForUpdateDto> patchDoc)
         {
-            var grade = await _repository.Comnata.GetComnataAsync(comnataId, trackChanges: false);
-            if (grade == null)
+            var comnata = await _repository.Comnata.GetComnataAsync(comnataId, trackChanges: false);
+            if (comnata == null)
             {
                 _logger.LogInfo($"Comnata with id: {comnataId} doesn't exist in the database.");
                 return NotFound();
@@ -114,15 +113,15 @@ namespace CompanyEmployees.Controllers
                 _logger.LogInfo($"Human with id: {id} doesn't exist in the database.");
                 return NotFound();
             }
-            var studentToPatch = _mapper.Map<HumanForUpdateDto>(HumanEntity);
-            patchDoc.ApplyTo(studentToPatch, (Microsoft.AspNetCore.JsonPatch.Adapters.IObjectAdapter)ModelState);
-            TryValidateModel(studentToPatch);
+            var humanToPatch = _mapper.Map<HumanForUpdateDto>(HumanEntity);
+            patchDoc.ApplyTo(humanToPatch, (Microsoft.AspNetCore.JsonPatch.Adapters.IObjectAdapter)ModelState);
+            TryValidateModel(humanToPatch);
             if (!ModelState.IsValid)
             {
                 _logger.LogError("Invalid model state for the patch document");
                 return UnprocessableEntity(ModelState);
             }
-            _mapper.Map(studentToPatch, HumanEntity);
+            _mapper.Map(humanToPatch, HumanEntity);
             await _repository.SaveAsync();
             return NoContent();
         }

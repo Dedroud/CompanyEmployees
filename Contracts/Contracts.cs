@@ -1,14 +1,12 @@
 ﻿using Entities.Models;
+using Entities.RequestFeatures;
+using System.Diagnostics;
 using System.Linq.Expressions;
 
 
 
 namespace Contracts
 {
-    public interface IHumanRepository 
-    {
-
-    }
 
     public interface ICompanyRepository
     {
@@ -21,11 +19,10 @@ namespace Contracts
 
     public interface IEmployeeRepository
     {
-        IEnumerable<Employee> GetEmployees(Guid companyId, bool trackChanges);
-        Employee GetEmployee(Guid companyId, Guid id, bool trackChanges);
+        Task<PagedList<Employee>> GetEmployeesAsync(Guid companyId, EmployeeParameters employeeParameters, bool trackChanges);
+        Task<Employee> GetEmployeeAsync(Guid companyId, Guid id, bool trackChanges);
         void CreateEmployeeForCompany(Guid companyId, Employee employee);
         void DeleteEmployee(Employee employee);
-        Task GetEmployeesAsync(Guid companyId, bool trackChanges);
     }
 
     public interface ILoggerManager
@@ -41,6 +38,8 @@ namespace Contracts
         ICompanyRepository Company { get; }
         IEmployeeRepository Employee { get; }
         ILoggerManager LoggerManager { get; }
+        IComnataRepository Comnata { get; }
+        IHumanRepository Human { get; }
         void Save();
         Task SaveAsync();
     }
@@ -51,6 +50,27 @@ namespace Contracts
         void Create(T entity);
         void Update(T entity);
         void Delete(T entity);
+    }
+    public interface IHumanRepository
+    {
+        Task<PagedList<Human>> GetHumanAsync(Guid gradeId, HumanParameters HumanParameters, bool trackChanges);
+        Task<Human> GetHumanAsync(Guid gradeId, Guid id, bool trackChanges);
+        void CreateHumanForComnata(Guid gradeId, Human Human);
+        void DeleteHuman(Human Human);
+        Task GetComnataAsync(Guid comnataId, bool trackChanges);
+    }
+    public interface IComnataRepository
+    {
+        Task<IEnumerable<Comnata>> GetAllComnatasAsync(bool trackChanges);
+        Task<Comnata> GetComnataAsync(Guid ComnataId, bool trackChanges);
+        void CreateComnata(Comnata Comnata);
+        Task<IEnumerable<Comnata>> GetByIdsAsync(IEnumerable<Guid> ids, bool trackChanges);
+        void DeleteComnata(Comnata Comnata);
+    }
+
+    public class HumanParameters : EmployeeParameters
+    {
+
     }
 
 }

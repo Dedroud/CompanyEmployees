@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Contracts;
+using Entities.RequestFeatures;
 
 namespace Repository
 {
@@ -34,6 +35,31 @@ namespace Repository
         }
 
         public void AnyMethodFromEmployeeRepository()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task GetComnataAsync(Guid comnataId, bool trackChanges)
+        {
+            throw new NotImplementedException();
+        }
+
+        void IHumanRepository.CreateHumanForComnata(Guid gradeId, Human Human)
+        {
+            throw new NotImplementedException();
+        }
+
+        void IHumanRepository.DeleteHuman(Human Human)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<PagedList<Human>> IHumanRepository.GetHumanAsync(Guid gradeId, HumanParameters HumanParameters, bool trackChanges)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<Human> IHumanRepository.GetHumanAsync(Guid gradeId, Guid id, bool trackChanges)
         {
             throw new NotImplementedException();
         }

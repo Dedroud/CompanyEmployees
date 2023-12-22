@@ -1,4 +1,6 @@
-﻿using NLog;
+﻿using Contracts;
+using NLog;
+
 
 namespace LoggerService
 {
@@ -26,3 +28,4 @@ namespace LoggerService
         }
     }
 }
+

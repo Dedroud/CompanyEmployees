@@ -1,56 +1,81 @@
-﻿using CompanyEmployees.Extensions;
+﻿using AutoMapper;
+using CompanyEmployees.ActionFilters;
+using CompanyEmployees.Extensions;
+using Contracts;
+using Entities.DataTransferObjects;
+using Entities.Models;
+using LoggerService;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Mvc;
 using NLog;
+using System.Linq.Expressions;
 
-namespace ShopApi;
-
-public class Startup
+namespace CompanyEmployees
 {
-    public Startup(IConfiguration configuration)
+    public class Startup
     {
-        LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(),
-            "/nlog.config"));
-        Configuration = configuration;
-    }
-
-    public IConfiguration Configuration { get; }
-
-    public void ConfigureServices(IServiceCollection services)
-    {
-        services.ConfigureCors();
-        services.ConfigureIISIntegration();
-        services.ConfigureLoggerService();
-
-        services.AddControllers();
-        services.ConfigureLoggerService();
-        services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen();
-    }
-
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-    {
-        if (env.IsDevelopment())
+        public Startup(IConfiguration configuration)
         {
-            app.UseDeveloperExceptionPage();
-            app.UseSwagger();
-            app.UseSwaggerUI();
+            LogManager.Setup().LoadConfigurationFromFile(string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
+            Configuration = configuration;
         }
 
-        app.UseHttpsRedirection();
-        app.UseStaticFiles();
-        app.UseCors("CorsPolicy");
-        app.UseForwardedHeaders(new ForwardedHeadersOptions
+        public IConfiguration Configuration { get; }
+
+        public void ConfigureServices(IServiceCollection services)
         {
-            ForwardedHeaders = ForwardedHeaders.All
-        });
+            services.ConfigureCors();
+            services.ConfigureIISIntegration();
+            services.ConfigureLoggerService();
+            services.ConfigureRepositoryManager();
+            services.AddControllers();
+            services.AddEndpointsApiExplorer();
+            services.AddSwaggerGen();
+            services.AddAutoMapper(typeof(Startup));
+            services.AddControllers(config =>
+            {
+                config.RespectBrowserAcceptHeader = true;
+                config.ReturnHttpNotAcceptable = true;
+            })
+            .AddXmlDataContractSerializerFormatters()
+            .AddCustomCSVFormatter();
+            services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
+            });
+            services.AddScoped<ValidationFilterAttribute>();
+            services.AddScoped<ValidateCompanyExistsAttribute>();
+            services.AddScoped<ValidateEmployeeForCompanyExistsAttribute>();
+            services.AddScoped<ValidateComnataExistsAttribute>();
+            services.AddScoped<ValidateHumanForComnataExistsAttribute>();
+            services.ConfigureVersioning();
+        }
 
-        app.UseRouting();
-
-        app.UseAuthorization();
-
-        app.UseEndpoints(endpoints =>
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerManager logger)
         {
-            endpoints.MapControllers();
-        });
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseSwaggerUI();
+            }
+            app.ConfigureExceptionHandler(logger);
+            app.UseHttpsRedirection();
+            app.UseStaticFiles();
+            app.UseCors("CorsPolicy");
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.All
+            });
+
+            app.UseRouting();
+
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
+        }
     }
 }
